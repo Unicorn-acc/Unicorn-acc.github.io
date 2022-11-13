@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>图像分类_Fashion-MNIST数据集(ResNet18进行迁移学习) | Miraclo的个人博客</title><meta name="author" content="Miraclo"><meta name="copyright" content="Miraclo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Fashion-MNIST数据集简介  论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1708.07747.pdf Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms GitHub：https:&#x2F;&#x2F;github.com&#x2F;zalandoresearch&#x2F;fashion-mnis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像分类_Fashion-MNIST数据集(ResNet18进行迁移学习)">
+<meta property="og:url" content="http://unicorn-acc.github.io/DeepLearning/dataset/Fashion-MNIST/index.html">
+<meta property="og:site_name" content="Miraclo的个人博客">
+<meta property="og:description" content="Fashion-MNIST数据集简介  论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1708.07747.pdf Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms GitHub：https:&#x2F;&#x2F;github.com&#x2F;zalandoresearch&#x2F;fashion-mnis">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg">
+<meta property="article:published_time" content="2022-11-04T04:21:34.000Z">
+<meta property="article:modified_time" content="2022-11-10T08:26:40.321Z">
+<meta property="article:author" content="Miraclo">
+<meta property="article:tag" content="DeepLearning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://unicorn-acc.github.io/DeepLearning/dataset/Fashion-MNIST/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":2000},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":500,"languages":{"author":"作者: Miraclo","link":"链接: ","source":"来源: Miraclo的个人博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '图像分类_Fashion-MNIST数据集(ResNet18进行迁移学习)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-10 16:26:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">148</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">23</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Miraclo的个人博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">图像分类_Fashion-MNIST数据集(ResNet18进行迁移学习)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-04T04:21:34.000Z" title="发表于 2022-11-04 12:21:34">2022-11-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-10T08:26:40.321Z" title="更新于 2022-11-10 16:26:40">2022-11-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">深度学习笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E6%95%B0%E6%8D%AE%E9%9B%86/">数据集</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="图像分类_Fashion-MNIST数据集(ResNet18进行迁移学习)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="fashion-mnist数据集简介">Fashion-MNIST数据集简介</h1>
+<blockquote>
+<p>论文：https://arxiv.org/pdf/1708.07747.pdf</p>
+<p>Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms</p>
+<p>GitHub：https://github.com/zalandoresearch/fashion-mnist</p>
+<p>其他介绍：http://www.worldlink.com.cn/zh_tw/osdir/fashion-mnist.html</p>
+</blockquote>
+<p>​ <strong>Fashion-MNIST数据集</strong>是德国Zalando公司提供的衣物图像数据集，包含60,000个样本的<strong>训练集</strong>和10,000个样本的<strong>测试集</strong>。每个样本都是 <strong>28x28</strong> 灰度图像，与10个类别的标签相关联。<strong>Fashion-MNIST</strong>数据集旨在作为原始<strong>MNIST</strong>数据集的直接替代品，用于对<strong>机器学习算法</strong>进行基准测试。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Unicorn-acc/blogimgs/imgs/92c9d72045214ad8bf9f95ae0d817ac9.png" style="zoom:50%;" /></p>
+<p>数据量：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Unicorn-acc/blogimgs/imgs/image-20221104123100501.png" /></p>
+<p><strong>Why we made Fashion-MNIST？</strong></p>
+<p>The original MNIST dataset contains a lot of handwritten digits. Members of the AI/ML/Data Science community love this dataset and use it as a benchmark to validate their algorithms. In fact, MNIST is often the first dataset researchers try. “If it doesn’t work on MNIST, it won’t work at all”, they said. “Well, if it does work on MNIST, it may still fail on others.”</p>
+<h1 id="fashion-mnist数据集下载">Fashion-MNIST数据集下载</h1>
+<h2 id="pytorch库下载fashionmnist数据集">Pytorch库下载FashionMNIST数据集</h2>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> torch
+<span class="token keyword">import</span> torchvision
+
+<span class="token comment"># 通过ToTensor实例将图像数据从PIL类型变换成32位浮点数格式，# 并除以255使得所有像素的数值均在0到1之间</span>
+trans <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>transforms<span class="token punctuation">.</span>ToTensor<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 如果保存在代码根目录/data下：root="../data"</span>
+mnist_train <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span>
+                              train<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+mnist_test <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span>
+                              train<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>mnist_train<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token builtin">len</span><span class="token punctuation">(</span>mnist_test<span class="token punctuation">)</span><span class="token punctuation">,</span>sep<span class="token operator">=</span><span class="token string">"\n"</span><span class="token punctuation">)</span>
+<span class="token comment"># 60000</span>
+<span class="token comment"># 10000</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>文件结构：</p>
+<pre class="line-numbers language-none"><code class="language-none">E:.
+└─FashionMNIST
+    └─raw
+            t10k-images-idx3-ubyte
+            t10k-images-idx3-ubyte.gz
+            t10k-labels-idx1-ubyte
+            t10k-labels-idx1-ubyte.gz
+            train-images-idx3-ubyte
+            train-images-idx3-ubyte.gz
+            train-labels-idx1-ubyte
+            train-labels-idx1-ubyte.gz
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>如何从文本文件中加载已下载的MNIST数据集（后缀名为.idx3-ubyte）的代码？https://zhuanlan.zhihu.com/p/462014474</p>
+</blockquote>
+<h1 id="resnet18迁移学习fashion-mnist数据集">ResNet18迁移学习Fashion-MNIST数据集</h1>
+<blockquote>
+<p><code>pytorch</code>官方的迁移学习教程（蚂蚁、蜜蜂分类）</p>
+<p>https://blog.csdn.net/qq_42951560/article/details/109950786</p>
+</blockquote>
+<p>如何进行迁移学习？</p>
+<p><strong>1、预训练模型</strong></p>
+<p>迁移学习需要选择一个预训练模型，我们这个任务也不是特别大，选择<code>resnet18</code>就行了。</p>
+<p><strong>2、数据预处理</strong></p>
+<p>resnet18输入的CHW是<code>(3, 224, 224)</code> mnist数据集中单张图片CHW是<code>(1, 28, 28)</code></p>
+<p>所以我们需要对<code>mnist</code>数据集做一下预处理：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Unicorn-acc/blogimgs/imgs/20201202131834239.png" /></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">trans <span class="token operator">=</span> transforms<span class="token punctuation">.</span>Compose<span class="token punctuation">(</span><span class="token punctuation">[</span>
+    transforms<span class="token punctuation">.</span>Resize<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">224</span><span class="token punctuation">,</span> <span class="token number">224</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    transforms<span class="token punctuation">.</span>Grayscale<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    transforms<span class="token punctuation">.</span>ToTensor<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    transforms<span class="token punctuation">.</span>Normalize<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0.1307</span><span class="token punctuation">,</span> <span class="token number">0.1307</span><span class="token punctuation">,</span> <span class="token number">0.1307</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0.3081</span><span class="token punctuation">,</span> <span class="token number">0.3081</span><span class="token punctuation">,</span> <span class="token number">0.3081</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+train_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>
+    root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span> train<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+test_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>
+    root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span> train<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>3、修改全连接层</strong></p>
+<p><code>resnet18</code>是在<code>imagenet</code>上训练的，输出特征数是<code>1000</code>；而对于<code>mnist</code>来说，需要分<code>10</code>类，因此要改一下全连接层的输出。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">model <span class="token operator">=</span> models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+in_features <span class="token operator">=</span> model<span class="token punctuation">.</span>fc<span class="token punctuation">.</span>in_features
+model<span class="token punctuation">.</span>fc <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span>in_features<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token comment"># ------------------------------------------</span>
+<span class="token comment"># 使用ResNet18模型</span>
+model <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>fc <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">512</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>  <span class="token comment"># Fashion-MNIST只有十个类别，修改最后全连接层的输出</span>
+<span class="token comment"># print(model)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>4、调整学习率</strong></p>
+<p>之前设置的<code>Adam</code>的学习率是<code>1e-3</code>，现在使用了迁移学习，所以学习率调小一点，改为<code>1e-4</code>。</p>
+<h2 id="完整代码与训练结果">完整代码与训练结果</h2>
+<p>完整代码</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> torch
+<span class="token keyword">import</span> torchvision
+<span class="token keyword">from</span> torch <span class="token keyword">import</span> nn
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>utils<span class="token punctuation">.</span>data <span class="token keyword">import</span> DataLoader
+<span class="token keyword">from</span> torchvision <span class="token keyword">import</span> transforms
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>utils<span class="token punctuation">.</span>tensorboard <span class="token keyword">import</span> SummaryWriter
+
+writer <span class="token operator">=</span> SummaryWriter<span class="token punctuation">(</span><span class="token string">"logs_train"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">load_data_fashion_mnist</span><span class="token punctuation">(</span>batch_size<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Download the Fashion-MNIST dataset and then load it into memory.
+    Defined in :numref:`sec_fashion_mnist`"""</span>
+    trans <span class="token operator">=</span> transforms<span class="token punctuation">.</span>Compose<span class="token punctuation">(</span><span class="token punctuation">[</span>
+        transforms<span class="token punctuation">.</span>Resize<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">224</span><span class="token punctuation">,</span> <span class="token number">224</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        transforms<span class="token punctuation">.</span>Grayscale<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        transforms<span class="token punctuation">.</span>ToTensor<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        transforms<span class="token punctuation">.</span>Normalize<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0.1307</span><span class="token punctuation">,</span> <span class="token number">0.1307</span><span class="token punctuation">,</span> <span class="token number">0.1307</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0.3081</span><span class="token punctuation">,</span> <span class="token number">0.3081</span><span class="token punctuation">,</span> <span class="token number">0.3081</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    train_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>
+        root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span> train<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    test_data <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>datasets<span class="token punctuation">.</span>FashionMNIST<span class="token punctuation">(</span>
+        root<span class="token operator">=</span><span class="token string">"E:\dataset"</span><span class="token punctuation">,</span> train<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> transform<span class="token operator">=</span>trans<span class="token punctuation">,</span> download<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># length 长度</span>
+    train_data_size <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>train_data<span class="token punctuation">)</span>
+    test_data_size <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>test_data<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"训练数据集的长度为：&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>train_data_size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"测试数据集的长度为：&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>test_data_size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    train_dataloader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>train_data<span class="token punctuation">,</span> batch_size<span class="token operator">=</span>batch_size<span class="token punctuation">)</span>
+    test_dataloader <span class="token operator">=</span> DataLoader<span class="token punctuation">(</span>test_data<span class="token punctuation">,</span> batch_size<span class="token operator">=</span>batch_size<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> train_dataloader<span class="token punctuation">,</span> test_dataloader<span class="token punctuation">,</span> train_data_size<span class="token punctuation">,</span> test_data_size
+
+
+train_dataloader<span class="token punctuation">,</span> test_dataloader<span class="token punctuation">,</span> \
+    train_data_size<span class="token punctuation">,</span> test_data_size <span class="token operator">=</span> load_data_fashion_mnist<span class="token punctuation">(</span>batch_size<span class="token operator">=</span><span class="token number">64</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 使用ResNet18模型</span>
+model <span class="token operator">=</span> torchvision<span class="token punctuation">.</span>models<span class="token punctuation">.</span>resnet18<span class="token punctuation">(</span>pretrained<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>fc <span class="token operator">=</span> nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">512</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>  <span class="token comment"># Fashion-MNIST只有十个类别，修改最后全连接层的输出</span>
+<span class="token comment"># print(model)</span>
+
+total_train_step <span class="token operator">=</span> <span class="token number">0</span>
+total_test_step <span class="token operator">=</span> <span class="token number">0</span>
+total_test_loss <span class="token operator">=</span> <span class="token number">0</span>
+
+device <span class="token operator">=</span> torch<span class="token punctuation">.</span>device<span class="token punctuation">(</span><span class="token string">"cuda"</span> <span class="token keyword">if</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">else</span> <span class="token string">"cpu"</span><span class="token punctuation">)</span>
+model <span class="token operator">=</span> model<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"运行设备：&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>device<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+loss_fn <span class="token operator">=</span> nn<span class="token punctuation">.</span>CrossEntropyLoss<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+lr <span class="token operator">=</span> <span class="token number">1e-4</span>  <span class="token comment"># 1e-2 = 0.01</span>
+epoch <span class="token operator">=</span> <span class="token number">10</span>
+
+optim <span class="token operator">=</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>SGD<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--------第&#123;&#125;轮训练开始--------"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> imgs<span class="token punctuation">,</span> targets <span class="token keyword">in</span> train_dataloader<span class="token punctuation">:</span>
+        imgs<span class="token punctuation">,</span> targets <span class="token operator">=</span> imgs<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span><span class="token punctuation">,</span> targets<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span>
+        output <span class="token operator">=</span> model<span class="token punctuation">(</span>imgs<span class="token punctuation">)</span>
+        loss <span class="token operator">=</span> loss_fn<span class="token punctuation">(</span>output<span class="token punctuation">,</span> targets<span class="token punctuation">)</span>
+        optim<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        optim<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        total_train_step <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">if</span> total_train_step <span class="token operator">%</span> <span class="token number">100</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"训练次数：&#123;&#125;,Loss:&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>total_train_step<span class="token punctuation">,</span> loss<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            writer<span class="token punctuation">.</span>add_scalar<span class="token punctuation">(</span><span class="token string">"train_loss"</span><span class="token punctuation">,</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> total_train_step<span class="token punctuation">)</span>
+
+    total_test_loss <span class="token operator">=</span> <span class="token number">0</span>
+    total_accuracy <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> imgs<span class="token punctuation">,</span> targets <span class="token keyword">in</span> test_dataloader<span class="token punctuation">:</span>
+        imgs<span class="token punctuation">,</span> targets <span class="token operator">=</span> imgs<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span><span class="token punctuation">,</span> targets<span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span>
+        output <span class="token operator">=</span> model<span class="token punctuation">(</span>imgs<span class="token punctuation">)</span>
+        loss <span class="token operator">=</span> loss_fn<span class="token punctuation">(</span>output<span class="token punctuation">,</span> targets<span class="token punctuation">)</span>
+        total_test_loss <span class="token operator">=</span> total_test_loss <span class="token operator">+</span> loss<span class="token punctuation">.</span>item<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        accuracy <span class="token operator">=</span> <span class="token punctuation">(</span>output<span class="token punctuation">.</span>argmax<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">==</span> targets<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># 求输出正确的个数</span>
+        total_accuracy <span class="token operator">+=</span> accuracy
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"整体验证集上的Loss:&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>total_test_loss<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"整体测试集上的正确率：&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>total_accuracy <span class="token operator">/</span> test_data_size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    writer<span class="token punctuation">.</span>add_scalar<span class="token punctuation">(</span><span class="token string">"test_loss"</span><span class="token punctuation">,</span> total_test_loss<span class="token punctuation">,</span> total_test_step<span class="token punctuation">)</span>
+    writer<span class="token punctuation">.</span>add_scalar<span class="token punctuation">(</span><span class="token string">"test_accuracy"</span><span class="token punctuation">,</span> total_accuracy <span class="token operator">/</span> test_data_size<span class="token punctuation">,</span> total_test_step<span class="token punctuation">)</span>
+    total_test_step <span class="token operator">+=</span> <span class="token number">1</span>
+
+    <span class="token comment"># 每轮迭代保存一下模型，防止训练一半炸了</span>
+    torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>model<span class="token punctuation">,</span> <span class="token string">"model_&#123;&#125;"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"模型已保存"</span><span class="token punctuation">)</span>
+
+writer<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>训练结果：</p>
+<pre class="line-numbers language-none"><code class="language-none">训练数据集的长度为：60000
+测试数据集的长度为：10000
+运行设备：cuda
+--------第0轮训练开始--------
+训练次数：100,Loss:1.1714904308319092
+训练次数：200,Loss:1.0022860765457153
+训练次数：300,Loss:0.7957886457443237
+训练次数：400,Loss:0.8295809626579285
+训练次数：500,Loss:0.4154549539089203
+训练次数：600,Loss:0.48973602056503296
+训练次数：700,Loss:0.5927528738975525
+训练次数：800,Loss:0.6237527132034302
+训练次数：900,Loss:0.40881243348121643
+整体验证集上的Loss:73.876968562603
+整体测试集上的正确率：0.8346999883651733
+模型已保存
+--------第1轮训练开始--------<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://Unicorn-acc.github.io">Miraclo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://unicorn-acc.github.io/DeepLearning/dataset/Fashion-MNIST/">http://unicorn-acc.github.io/DeepLearning/dataset/Fashion-MNIST/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://Unicorn-acc.github.io" target="_blank">Miraclo的个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DeepLearning/">DeepLearning</a></div><div class="post_share"><div class="social-share" data-image="https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/Database/MySQL/MySQL_Advanced_index/"><img class="prev-cover" src="https://w.wallhaven.cc/full/zy/wallhaven-zyxvqy.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL_10进阶_索引</div></div></a></div><div class="next-post pull-right"><a href="/DeepLearning/model/classification/network-AlexNet/"><img class="next-cover" src="https://w.wallhaven.cc/full/zy/wallhaven-zyxvqy.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">图像分类_01_AlexNet详解(tqdm进度条)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/DeepLearning/CAM/" title="CV可解释性分析_CAM热力图"><img class="cover" src="https://w.wallhaven.cc/full/zy/wallhaven-zyxvqy.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-03</div><div class="title">CV可解释性分析_CAM热力图</div></div></a></div><div><a href="/DeepLearning/Grad-CAM/" title="CV可解释性分析_Grad-CAM"><img class="cover" src="https://w.wallhaven.cc/full/vq/wallhaven-vqmyq3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-03</div><div class="title">CV可解释性分析_Grad-CAM</div></div></a></div><div><a href="/DeepLearning/dataset/CIFAR10/" title="图像分类_CIFAR10数据集"><img class="cover" src="https://w.wallhaven.cc/full/vq/wallhaven-vqmyq3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-07</div><div class="title">图像分类_CIFAR10数据集</div></div></a></div><div><a href="/DeepLearning/dataset/PASCALVOC2010/" title="目标检测&#x2F;分割_PASCAL VOC2012数据集与制作自己的数据集(VOC格式)"><img class="cover" src="https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-11</div><div class="title">目标检测&#x2F;分割_PASCAL VOC2012数据集与制作自己的数据集(VOC格式)</div></div></a></div><div><a href="/DeepLearning/dataset/MSCOCO/" title="目标检测&#x2F;分割&#x2F;图像描述_MS COCO数据集及pycocotools的使用"><img class="cover" src="https://w.wallhaven.cc/full/d6/wallhaven-d65mzm.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-11</div><div class="title">目标检测&#x2F;分割&#x2F;图像描述_MS COCO数据集及pycocotools的使用</div></div></a></div><div><a href="/DeepLearning/dataset/flower-photos/" title="图像分类_花分类数据集"><img class="cover" src="https://w.wallhaven.cc/full/2e/wallhaven-2ew2v6.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-06</div><div class="title">图像分类_花分类数据集</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#fashion-mnist%E6%95%B0%E6%8D%AE%E9%9B%86%E7%AE%80%E4%BB%8B"><span class="toc-text">Fashion-MNIST数据集简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#fashion-mnist%E6%95%B0%E6%8D%AE%E9%9B%86%E4%B8%8B%E8%BD%BD"><span class="toc-text">Fashion-MNIST数据集下载</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pytorch%E5%BA%93%E4%B8%8B%E8%BD%BDfashionmnist%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">Pytorch库下载FashionMNIST数据集</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#resnet18%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0fashion-mnist%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">ResNet18迁移学习Fashion-MNIST数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%E4%B8%8E%E8%AE%AD%E7%BB%83%E7%BB%93%E6%9E%9C"><span class="toc-text">完整代码与训练结果</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By Miraclo</div><div class="footer_custom_text">人只有在走上坡路的时候才会累和迷茫。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script></div><link rel="stylesheet" href="/css/Lete.css"><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

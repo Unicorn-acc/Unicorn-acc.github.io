@@ -1,0 +1,18 @@
+#footer {
+    background: transparent;
+}
+
+#footer-wrap{
+    color: #0d0d0d;
+}
+
+/*时间轴列表行间距*/
+.article-sort-item.no-article-cover {
+    height: 60px;
+}
+
+.category-lists ul li {
+    position: relative;
+    margin: 2px 0;
+    padding: 0.05em 0.4em 0.05em 1.4em;
+}
