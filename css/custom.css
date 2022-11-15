@@ -33,14 +33,6 @@
     -ms-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
-/*导航栏居中*/
-#nav-right{
-    flex:1 1 auto;
-    justify-content: flex-end;
-    margin-left: auto;
-    display: flex;
-    flex-wrap:nowrap;
-}
 
 /*宽屏自适应 https://yisous.xyz/posts/d1fc759/#%E5%89%8D%E8%A8%80*/
 .layout{
