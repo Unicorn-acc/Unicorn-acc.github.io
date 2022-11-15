@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://Unicorn-acc.github.io/DeepLearning/model/objectdetection/network-FasterRCNN/</loc>
+    <loc>http://Unicorn-acc.github.io/DeepLearning/model/objectdetection/network-SSD/</loc>
     <lastmod>2022-11-15</lastmod>
   </url>
   <url>
-    <loc>http://Unicorn-acc.github.io/DeepLearning/model/objectdetection/network-SSD/</loc>
+    <loc>http://Unicorn-acc.github.io/DeepLearning/model/objectdetection/network-FasterRCNN/</loc>
     <lastmod>2022-11-15</lastmod>
   </url>
   <url>
