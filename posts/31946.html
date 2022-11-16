@@ -1,0 +1,371 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>LC-981.基于时间的键值存储 | Miraclo’s Blog</title><meta name="author" content="Miraclo"><meta name="copyright" content="Miraclo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="981. 基于时间的键值存储 难度中等 设计一个基于时间的键值数据结构，该结构可以在不同时间戳存储对应同一个键的多个值，并针对特定时间戳检索键对应的值。 实现 TimeMap 类：  TimeMap() 初始化数据结构对象 void set(String key, String value, int timestamp) 存储键 key、值 value，以及给定的时间戳 timestamp。 &#96;&#96;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LC-981.基于时间的键值存储">
+<meta property="og:url" content="http://unicorn-acc.github.io/posts/31946.html">
+<meta property="og:site_name" content="Miraclo’s Blog">
+<meta property="og:description" content="981. 基于时间的键值存储 难度中等 设计一个基于时间的键值数据结构，该结构可以在不同时间戳存储对应同一个键的多个值，并针对特定时间戳检索键对应的值。 实现 TimeMap 类：  TimeMap() 初始化数据结构对象 void set(String key, String value, int timestamp) 存储键 key、值 value，以及给定的时间戳 timestamp。 &#96;&#96;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg">
+<meta property="article:published_time" content="2022-11-11T07:27:40.000Z">
+<meta property="article:modified_time" content="2022-11-16T04:27:08.798Z">
+<meta property="article:author" content="Miraclo">
+<meta property="article:tag" content="二分法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://unicorn-acc.github.io/posts/31946"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":2000},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":500,"languages":{"author":"作者: Miraclo","link":"链接: ","source":"来源: Miraclo’s Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LC-981.基于时间的键值存储',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-16 04:27:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">164</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:randomPost();"><i class="fa-fw fa-solid fa-shuffle"></i><span> </span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Miraclo’s Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:randomPost();"><i class="fa-fw fa-solid fa-shuffle"></i><span> </span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LC-981.基于时间的键值存储</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-11T07:27:40.000Z" title="发表于 2022-11-11 07:27:40">2022-11-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-16T04:27:08.798Z" title="更新于 2022-11-16 04:27:08">2022-11-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">算法刷题记录</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LC-981.基于时间的键值存储"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="基于时间的键值存储"><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/time-based-key-value-store/">981. 基于时间的键值存储</a></h1>
+<p>难度中等</p>
+<p>设计一个基于时间的键值数据结构，该结构可以在不同时间戳存储对应同一个键的多个值，并针对特定时间戳检索键对应的值。</p>
+<p>实现 <code>TimeMap</code> 类：</p>
+<ul>
+<li><p><code>TimeMap()</code> 初始化数据结构对象</p></li>
+<li><p><code>void set(String key, String value, int timestamp)</code> 存储键 <code>key</code>、值 <code>value</code>，以及给定的时间戳 <code>timestamp</code>。</p></li>
+<li><p>``` String get(String key, int timestamp) <pre class="line-numbers language-none"><code class="language-none">
+  - 返回先前调用 &#96;set(key, value, timestamp_prev)&#96; 所存储的值，其中 &#96;timestamp_prev &lt;&#x3D; timestamp&#96; 。
+  - 如果有多个这样的值，则返回对应最大的 &#96;timestamp_prev&#96; 的那个值。
+  - 如果没有值，则返回空字符串（&#96;&quot;&quot;&#96;）。
+
+**示例：**
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre> 输入： ["TimeMap", "set", "get", "get", "set", "get", "get"] [[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]] 输出： [null, null, "bar", "bar", null, "bar2", "bar2"]</p></li>
+</ul>
+<p>解释： TimeMap timeMap = new TimeMap(); timeMap.set("foo", "bar", 1); // 存储键 "foo" 和值 "bar" ，时间戳 timestamp = 1<br />
+timeMap.get("foo", 1); // 返回 "bar" timeMap.get("foo", 3); // 返回 "bar", 因为在时间戳 3 和时间戳 2 处没有对应 "foo" 的值，所以唯一的值位于时间戳 1 处（即 "bar"） 。 timeMap.set("foo", "bar2", 4); // 存储键 "foo" 和值 "bar2" ，时间戳 timestamp = 4<br />
+timeMap.get("foo", 4); // 返回 "bar2" timeMap.get("foo", 5); // 返回 "bar2" <pre class="line-numbers language-none"><code class="language-none">
+ 
+
+**提示：**
+
+- &#96;1 &lt;&#x3D; key.length, value.length &lt;&#x3D; 100&#96;
+- &#96;key&#96; 和 &#96;value&#96; 由小写英文字母和数字组成
+- &#96;1 &lt;&#x3D; timestamp &lt;&#x3D; 107&#96;
+- &#96;set&#96; 操作中的时间戳 &#96;timestamp&#96; 都是严格递增的
+- 最多调用 &#96;set&#96; 和 &#96;get&#96; 操作 &#96;2 * 105&#96; 次
+
+## 使用TreeSet的floor方法
+
+&#96;floor&#96; 和 &#96;ceiling&#96; 方法，&#96;TreeMap&#96; 和 &#96;TreeSet&#96; 都有各自的实现。
+
+可以用来求 &#96;大于等于&#96; 和 &#96;小于等于&#96;，比一般的二分好用。
+
+&#96;&#96;&#96;java
+class TimeMap &#123;
+
+    Map&lt;String,TreeMap&lt;Integer,String&gt;&gt; data;
+
+    public TimeMap() &#123;
+        data &#x3D; new HashMap&lt;&gt;();
+    &#125;
+    
+    public void set(String key, String value, int timestamp) &#123;
+        TreeMap&lt;Integer,String&gt; v &#x3D; data.getOrDefault(key,new TreeMap&lt;&gt;());
+        v.put(timestamp,value);
+        data.put(key,v);
+    &#125;
+    
+    public String get(String key, int timestamp) &#123;
+        if(!data.containsKey(key))&#123;
+            return &quot;&quot;;
+        &#125;
+        Map.Entry&lt;Integer,String&gt; res &#x3D; data.get(key).floorEntry(timestamp);
+        return res &#x3D;&#x3D; null ? &quot;&quot; : res.getValue();
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<h2 id="哈希表套数组">哈希表套数组</h2>
+<p>题解来自：宫水三叶</p>
+<p>由于 <code>timestamp</code> 是严格递增，且没有删除 KV 的操作。</p>
+<p><strong>我们可以使用哈希表套数组的方式进行实现，从而达到均摊 <span class="math inline">\(O(1)\)</span> 的插入操作和 <span class="math inline">\(O(\log{n})\)</span>的查询操作。</strong></p>
+<p>具体的，为了方便理解，我们可以先建一个 <code>Node</code> 类，类中包含键值对和时间戳信息。</p>
+<p>然后使用一个全局哈希表 <code>map</code> 记录某个 <code>key</code> 对应了哪些 <code>Node</code>。其中多个 <code>Node</code> 是以动态数组的形式进行「以 <code>timestamp</code> 升序」存储：</p>
+<ul>
+<li><code>set</code> 操作：以 <span class="math inline">\(O(1)\)</span> 的复杂度找到某个 <code>key</code> 对应的数组，利用 <code>timestamp</code> 严格递增的特性，以 <span class="math inline">\(O(1)\)</span> 复杂度将新 <code>Node</code> 加入当前数组尾部；</li>
+<li><code>get</code> 操作：以 <span class="math inline">\(O(1)\)</span> 的复杂度找到某个 <code>key</code> 对应的数组，利用 <code>timestamp</code> 严格递增的特性，通过二分以 <span class="math inline">\(O(\log{n})\)</span>复杂度找到可能符合条件的 <code>Node</code>。</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">TimeMap</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> k<span class="token punctuation">,</span> v<span class="token punctuation">;</span> 
+        <span class="token keyword">int</span> t<span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> <span class="token punctuation">(</span><span class="token class-name">String</span> _k<span class="token punctuation">,</span> <span class="token class-name">String</span> _v<span class="token punctuation">,</span> <span class="token keyword">int</span> _t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            k <span class="token operator">=</span> _k<span class="token punctuation">;</span> v <span class="token operator">=</span> _v<span class="token punctuation">;</span> t <span class="token operator">=</span> _t<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    
+    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Node</span><span class="token punctuation">></span><span class="token punctuation">></span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">set</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token class-name">String</span> v<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Node</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">getOrDefault</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Node</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> v<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Node</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">getOrDefault</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> n <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> l <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> r <span class="token operator">=</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>l <span class="token operator">&lt;</span> r<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">int</span> mid <span class="token operator">=</span> l <span class="token operator">+</span> r <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">>></span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>mid<span class="token punctuation">)</span><span class="token punctuation">.</span>t <span class="token operator">&lt;=</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                l <span class="token operator">=</span> mid<span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                r <span class="token operator">=</span> mid <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">.</span>t <span class="token operator">&lt;=</span> t <span class="token operator">?</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">.</span>v <span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>时间复杂度：<code>set</code> 操作的复杂度为 <span class="math inline">\(O(\log{n})\)</span>；<code>get</code> 操作会完成随机删除/重新插入/查询的动作，复杂度均为为 <span class="math inline">\(O(\log{n})\)</span>，整个 <code>get</code> 的复杂度仍是 <span class="math inline">\(O(\log{n})\)</span>（只是常数变大了）</li>
+<li>空间复杂度：<span class="math inline">\(O(n)\)</span></li>
+</ul>
+<h2 id="哈希表套树增加del操作">哈希表套树（增加del操作）</h2>
+<p>如果增加 <code>del</code> 操作呢？我们需要做出何种调整？</p>
+<p>考虑在原题的基础上，增加一个 <code>String del(String k, int t)</code> 的功能：将严格等于键和时间戳的 KV 对删掉。</p>
+<p><strong>由于存在删除 KV 的动作，我们需要将实现从「哈希表套数组」改成「哈希表套树」，这里直接使用基于红黑树实现的 <code>TreeMap</code> 即可。</strong></p>
+<p>同时为了验证删除逻辑的正确性，我们在 <code>get</code> 动作发生前，先产生一次随机性的删除，删除后又重新插入。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">TimeMap</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> k<span class="token punctuation">,</span> v<span class="token punctuation">;</span>
+        <span class="token keyword">int</span> t<span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> <span class="token punctuation">(</span><span class="token class-name">String</span> _k<span class="token punctuation">,</span> <span class="token class-name">String</span> _v<span class="token punctuation">,</span> <span class="token keyword">int</span> _t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            k <span class="token operator">=</span> _k<span class="token punctuation">;</span> v <span class="token operator">=</span> _v<span class="token punctuation">;</span> t <span class="token operator">=</span> _t<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">TreeMap</span><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span><span class="token punctuation">></span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">set</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token class-name">String</span> v<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">update</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">TreeMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span> ts <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">getOrDefault</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">TreeMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ts<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Node</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> v<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> ts<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token class-name">Node</span> <span class="token function">_get</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">TreeMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span> ts <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>ts <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token class-name">Map<span class="token punctuation">.</span>Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span> entry <span class="token operator">=</span> ts<span class="token punctuation">.</span><span class="token function">floorEntry</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>entry <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> node <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> node<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">randomDel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> node <span class="token operator">=</span> <span class="token function">_get</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> node <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> node<span class="token punctuation">.</span>t <span class="token operator">&lt;=</span> t <span class="token operator">?</span> node<span class="token punctuation">.</span>v <span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">del</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">TreeMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span> ts <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>ts <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token class-name">Map<span class="token punctuation">.</span>Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">></span></span> entry <span class="token operator">=</span> ts<span class="token punctuation">.</span><span class="token function">floorEntry</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>entry <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> node <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>node <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> node<span class="token punctuation">.</span>t <span class="token operator">==</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            ts<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> node<span class="token punctuation">.</span>v<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> allInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token class-name">Random</span> random <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 保存所有的 kt 信息</span>
+    <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">String</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> t<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> nk <span class="token operator">=</span> k <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> t<span class="token punctuation">;</span>
+        allInfo<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>nk<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> 
+    <span class="token comment">// 随机删除，再重新插入，验证代码正确性</span>
+    <span class="token keyword">void</span> <span class="token function">randomDel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> idx <span class="token operator">=</span> random<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span>allInfo<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> ss <span class="token operator">=</span> allInfo<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> k <span class="token operator">=</span> ss<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> t <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>ss<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> node <span class="token operator">=</span> <span class="token function">_get</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">del</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span>k<span class="token punctuation">,</span> node<span class="token punctuation">.</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">set</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span>k<span class="token punctuation">,</span> node<span class="token punctuation">.</span>v<span class="token punctuation">,</span> node<span class="token punctuation">.</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>时间复杂度：<code>set</code> 操作的复杂度为 <span class="math inline">\(O(\log{n})\)</span>；<code>get</code> 操作会完成随机删除/重新插入/查询的动作，复杂度均为为 <span class="math inline">\(O(\log{n})\)</span>，整个 <code>get</code> 的复杂度仍是 <span class="math inline">\(O(\log{n})\)</span>（只是常数变大了）</li>
+<li>空间复杂度：<span class="math inline">\(O(n)\)</span></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://Unicorn-acc.github.io">Miraclo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://unicorn-acc.github.io/posts/31946.html">http://unicorn-acc.github.io/posts/31946.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://Unicorn-acc.github.io" target="_blank">Miraclo’s Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BA%8C%E5%88%86%E6%B3%95/">二分法</a></div><div class="post_share"><div class="social-share" data-image="https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/30947.html"><img class="prev-cover" src="https://w.wallhaven.cc/full/d6/wallhaven-d65mzm.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LC-1300.转变数组后最接近目标值的数组和</div></div></a></div><div class="next-post pull-right"><a href="/posts/23676.html"><img class="next-cover" src="https://w.wallhaven.cc/full/1p/wallhaven-1pjml1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LC-1704.判断字符串的两半是否相似</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/30741.html" title="LC-154.寻找旋转排序数组中的最小值Ⅱ"><img class="cover" src="https://w.wallhaven.cc/full/d6/wallhaven-d65mzm.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-08</div><div class="title">LC-154.寻找旋转排序数组中的最小值Ⅱ</div></div></a></div><div><a href="/posts/941.html" title="LC-162.寻找峰值"><img class="cover" src="https://w.wallhaven.cc/full/kx/wallhaven-kx3p1q.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-07</div><div class="title">LC-162.寻找峰值</div></div></a></div><div><a href="/posts/35779.html" title="LC-222.完全二叉树的节点个数"><img class="cover" src="https://w.wallhaven.cc/full/zy/wallhaven-zyxvqy.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-05</div><div class="title">LC-222.完全二叉树的节点个数</div></div></a></div><div><a href="/posts/8269.html" title="LC-240.搜索二维矩阵Ⅱ"><img class="cover" src="https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-03</div><div class="title">LC-240.搜索二维矩阵Ⅱ</div></div></a></div><div><a href="/posts/18531.html" title="LC-275.H指数Ⅱ"><img class="cover" src="https://w.wallhaven.cc/full/vq/wallhaven-vqmyq3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-03</div><div class="title">LC-275.H指数Ⅱ</div></div></a></div><div><a href="/posts/43664.html" title="LC-436.寻找右区间"><img class="cover" src="https://w.wallhaven.cc/full/p9/wallhaven-p9273e.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-06</div><div class="title">LC-436.寻找右区间</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84%E9%94%AE%E5%80%BC%E5%AD%98%E5%82%A8"><span class="toc-text">981. 基于时间的键值存储</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E5%A5%97%E6%95%B0%E7%BB%84"><span class="toc-text">哈希表套数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E5%A5%97%E6%A0%91%E5%A2%9E%E5%8A%A0del%E6%93%8D%E4%BD%9C"><span class="toc-text">哈希表套树（增加del操作）</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By Miraclo</div><div class="footer_custom_text">人只有在走上坡路的时候才会累和迷茫。</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script></div><link rel="stylesheet" href="/css/Lete.css"><script src="/js/custom.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="http://Unicorn-acc.github.io/categories/Java技术栈/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 Java技术栈相关 (50)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="http://Unicorn-acc.github.io/categories/深度学习笔记/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🎮 深度学习笔记相关 (18)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="http://Unicorn-acc.github.io/categories/深度学习笔记/网络模型/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📒 网络模型 (10)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="http://Unicorn-acc.github.io/categories/算法刷题记录/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">‍💻 算法刷题记录 (57)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="http://Unicorn-acc.github.io/categories/数据库/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">‍👓 数据库相关 (36)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item" style="visibility: hidden"></div><a class="magnet_link_more"  href="http://Unicorn-acc.github.io/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(33.333333333333336% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><!-- hexo injector body_end end --></body></html>
